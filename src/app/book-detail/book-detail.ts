@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Data, BookDetail as BookDetailModel } from '../data';
+import { BookDetail as BookDetailModel, BookService } from '../services/book.service';
 
 @Component({
   selector: 'app-book-detail',
@@ -10,8 +10,8 @@ import { Data, BookDetail as BookDetailModel } from '../data';
   styleUrl: './book-detail.css'
 })
 export class BookDetail implements OnInit {
-  route = inject(ActivatedRoute);
-  data = inject(Data);
+  private route = inject(ActivatedRoute);
+  private bookService = inject(BookService);
 
   bookId = '';
   book: BookDetailModel | null = null;
@@ -29,7 +29,7 @@ export class BookDetail implements OnInit {
 
     this.loading = true;
 
-    this.data.getBookById(this.bookId).subscribe({
+    this.bookService.getBookById(this.bookId).subscribe({
       next: (response) => {
         this.book = response;
         this.loading = false;

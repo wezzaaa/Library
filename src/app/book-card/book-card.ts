@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Book, Data } from '../data';
+import { Book } from '../services/book.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-book-card',
@@ -12,7 +13,7 @@ import { Book, Data } from '../data';
 export class BookCard {
   @Input() book!: Book;
 
-  data = inject(Data);
+  private storageService = inject(StorageService);
 
   getCoverUrl(): string {
     if (this.book.coverId) {
@@ -25,32 +26,32 @@ export class BookCard {
   ajouterAuxFavoris(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.data.addToFavorites(this.book);
+    this.storageService.addToFavorites(this.book);
   }
 
   retirerDesFavoris(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.data.removeFromFavorites(this.book.id);
+    this.storageService.removeFromFavorites(this.book.id);
   }
 
   estFavori(): boolean {
-    return this.data.isFavorite(this.book.id);
+    return this.storageService.isFavorite(this.book.id);
   }
 
   ajouterALire(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.data.addToReadingList(this.book);
+    this.storageService.addToReadingList(this.book);
   }
 
   retirerALire(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.data.removeFromReadingList(this.book.id);
+    this.storageService.removeFromReadingList(this.book.id);
   }
 
   estDansALire(): boolean {
-    return this.data.isInReadingList(this.book.id);
+    return this.storageService.isInReadingList(this.book.id);
   }
 }

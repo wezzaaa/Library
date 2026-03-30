@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { BookCard } from '../book-card/book-card';
-import { Book, Data } from '../data';
+import { Book } from '../services/book.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-favorites',
@@ -10,15 +11,13 @@ import { Book, Data } from '../data';
   styleUrl: './favorites.css'
 })
 export class Favorites implements OnInit {
-  data = inject(Data);
+  private storageService = inject(StorageService);
 
   books: Book[] = [];
 
   ngOnInit(): void {
-    this.chargerFavoris();
-  }
-
-  chargerFavoris(): void {
-    this.books = this.data.getFavorites();
+    this.storageService.favorites$.subscribe(favorites => {
+      this.books = favorites;
+    });
   }
 }

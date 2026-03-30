@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { BookCard } from '../book-card/book-card';
-import { Book, Data } from '../data';
+import { Book } from '../services/book.service';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-reading-list',
@@ -10,15 +11,13 @@ import { Book, Data } from '../data';
   styleUrl: './reading-list.css'
 })
 export class ReadingList implements OnInit {
-  data = inject(Data);
+  private storageService = inject(StorageService);
 
   books: Book[] = [];
 
   ngOnInit(): void {
-    this.chargerListeALire();
-  }
-
-  chargerListeALire(): void {
-    this.books = this.data.getReadingList();
+    this.storageService.readingList$.subscribe(readingList => {
+      this.books = readingList;
+    });
   }
 }

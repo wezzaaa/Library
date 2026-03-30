@@ -1,15 +1,8 @@
 <h1>Accueil bibliothèque</h1>
-
-<div class="search-bar">
-  <input [(ngModel)]="search" type="text" placeholder="Rechercher un livre ou un auteur">
-  <button (click)="chercher()">Rechercher</button>
-</div>
+<p>Bienvenue sur l'application Library.</p>
+<p>Découvre des livres, leurs auteurs, ajoute des favoris et prépare ta liste à lire.</p>
 
 <p *ngIf="loading">Chargement...</p>
-
-<p *ngIf="!loading && books.length === 0">
-  Aucun livre trouvé.
-</p>
 
 <div class="books-grid" *ngIf="!loading && books.length > 0">
   <app-book-card

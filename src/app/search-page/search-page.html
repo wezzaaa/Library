@@ -1,2 +1,26 @@
 <h1>Recherche</h1>
-<p>Page de recherche de livres.</p>
+
+<div class="search-bar">
+  <input
+    [formControl]="searchControl"
+    type="text"
+    placeholder="Rechercher un livre ou un auteur"
+  >
+</div>
+
+<p *ngIf="loading">Chargement...</p>
+
+<p *ngIf="!loading && !hasSearched">
+  Commence à taper pour rechercher un livre.
+</p>
+
+<p *ngIf="!loading && hasSearched && books.length === 0 && message">
+  {{ message }}
+</p>
+
+<div class="books-grid" *ngIf="!loading && books.length > 0">
+  <app-book-card
+    *ngFor="let book of books"
+    [book]="book">
+  </app-book-card>
+</div>
