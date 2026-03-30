@@ -1,7 +1,9 @@
 <h1>Accueil bibliothèque</h1>
 
-<input [(ngModel)]="search" type="text" placeholder="Rechercher un livre ou un auteur">
-<button (click)="chercher()">Rechercher</button>
+<div class="search-bar">
+  <input [(ngModel)]="search" type="text" placeholder="Rechercher un livre ou un auteur">
+  <button (click)="chercher()">Rechercher</button>
+</div>
 
 <p *ngIf="loading">Chargement...</p>
 
@@ -9,10 +11,9 @@
   Aucun livre trouvé.
 </p>
 
-<div *ngFor="let book of books">
-  <p>
-    <strong>{{ book.title }}</strong>
-    - {{ book.authorNames.join(', ') }}
-    - {{ book.firstPublishYear }}
-  </p>
+<div class="books-grid" *ngIf="!loading && books.length > 0">
+  <app-book-card
+    *ngFor="let book of books"
+    [book]="book">
+  </app-book-card>
 </div>

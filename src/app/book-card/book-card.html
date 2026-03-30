@@ -1,1 +1,17 @@
-<p>book-card works!</p>
+<a class="card-link" [routerLink]="['/book', book.id]">
+  <div class="card">
+    <img [src]="getCoverUrl()" [alt]="book.title">
+
+    <h3>{{ book.title }}</h3>
+
+    <p>
+      <strong>Auteur(s) :</strong>
+      {{ book.authorNames.join(', ') || 'Inconnu' }}
+    </p>
+
+    <p>
+      <strong>Année :</strong>
+      {{ book.firstPublishYear || 'Inconnue' }}
+    </p>
+  </div>
+</a>

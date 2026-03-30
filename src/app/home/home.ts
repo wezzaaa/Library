@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Data, Book } from '../data';
+import { BookCard } from '../book-card/book-card';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BookCard],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -15,7 +16,6 @@ export class Home implements OnInit {
   books: Book[] = [];
   search = '';
   loading = false;
-  firstLoad = true;
 
   ngOnInit(): void {
     this.chargerAccueil();
@@ -49,7 +49,6 @@ export class Home implements OnInit {
       next: (response) => {
         this.books = response;
         this.loading = false;
-        this.firstLoad = false;
       },
       error: () => {
         this.books = [];
