@@ -1,1 +1,12 @@
-<p>header works!</p>
+<header class="header">
+  <div class="brand">
+    <a routerLink="/">Library</a>
+  </div>
+
+  <nav class="nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
+    <a routerLink="/search" routerLinkActive="active">Recherche</a>
+    <a routerLink="/favorites" routerLinkActive="active">Favoris</a>
+    <a routerLink="/reading-list" routerLinkActive="active">À lire</a>
+  </nav>
+</header>

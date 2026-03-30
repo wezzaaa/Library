@@ -1,13 +1,16 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-home',
-  template: `<h1>Library works!</h1>`,
-  standalone: true
-})
-class Home {}
+import { Home } from './home/home';
+import { SearchPage } from './search-page/search-page';
+import { BookDetail } from './book-detail/book-detail';
+import { AuthorDetail } from './author-detail/author-detail';
+import { Favorites } from './favorites/favorites';
+import { ReadingList } from './reading-list/reading-list';
 
 export const routes: Routes = [
-  { path: '', component: Home }
+  { path: '', component: Home },
+  { path: 'search', component: SearchPage },
+  { path: 'book/:id', component: BookDetail },
+  { path: 'author/:id', component: AuthorDetail },
+  { path: 'favorites', component: Favorites },
+  { path: 'reading-list', component: ReadingList }
 ];
