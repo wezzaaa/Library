@@ -1,2 +1,8 @@
-<h1>Détail de l’auteur</h1>
-<p>Informations détaillées sur un auteur.</p>
+<p *ngIf="loading">Chargement...</p>
+
+<div *ngIf="!loading && author">
+  <h1>{{ author.name }}</h1>
+  <p><strong>ID :</strong> {{ author.id }}</p>
+</div>
+
+<p *ngIf="!loading && !author">Auteur introuvable.</p>

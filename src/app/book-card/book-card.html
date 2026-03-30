@@ -13,5 +13,13 @@
       <strong>Année :</strong>
       {{ book.firstPublishYear || 'Inconnue' }}
     </p>
+
+    <button *ngIf="!estFavori()" (click)="ajouterAuxFavoris($event)">
+      Ajouter aux favoris
+    </button>
+
+    <button *ngIf="estFavori()" (click)="retirerDesFavoris($event)">
+      Retirer des favoris
+    </button>
   </div>
 </a>

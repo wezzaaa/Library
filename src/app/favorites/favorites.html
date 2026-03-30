@@ -1,2 +1,10 @@
 <h1>Favoris</h1>
-<p>Liste des livres favoris.</p>
+
+<p *ngIf="books.length === 0">Aucun favori pour le moment.</p>
+
+<div class="books-grid" *ngIf="books.length > 0">
+  <app-book-card
+    *ngFor="let book of books"
+    [book]="book">
+  </app-book-card>
+</div>

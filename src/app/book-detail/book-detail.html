@@ -1,3 +1,36 @@
-<h1>Détail du livre</h1>
+<p *ngIf="loading">Chargement...</p>
 
-<p>ID du livre : {{ bookId }}</p>
+<div *ngIf="!loading && book" class="detail-container">
+  <img [src]="getCoverUrl()" [alt]="book.title">
+
+  <div class="detail-content">
+    <h1>{{ book.title }}</h1>
+
+    <p>
+      <strong>Description :</strong>
+      {{ book.description }}
+    </p>
+
+    <p>
+      <strong>Auteurs :</strong>
+      <span *ngIf="book.authors.length === 0">Aucun auteur</span>
+
+      <ng-container *ngFor="let author of book.authors; let last = last">
+        <a [routerLink]="['/author', author.id]">{{ author.name }}</a>
+        <span *ngIf="!last">, </span>
+      </ng-container>
+    </p>
+
+    <p>
+      <strong>Sujets :</strong>
+      {{ book.subjects.slice(0, 8).join(', ') || 'Aucun sujet' }}
+    </p>
+
+    <p>
+      <strong>ID :</strong>
+      {{ book.id }}
+    </p>
+  </div>
+</div>
+
+<p *ngIf="!loading && !book">Livre introuvable.</p>
