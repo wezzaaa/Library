@@ -1,11 +1,60 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Data, Book } from '../data';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrl: './home.css'
 })
-export class Home {
+export class Home implements OnInit {
+  data = inject(Data);
 
+  books: Book[] = [];
+  search = '';
+  loading = false;
+  firstLoad = true;
+
+  ngOnInit(): void {
+    this.chargerAccueil();
+  }
+
+  chargerAccueil(): void {
+    this.loading = true;
+
+    this.data.getBooks('bestseller').subscribe({
+      next: (response) => {
+        this.books = response;
+        this.loading = false;
+      },
+      error: () => {
+        this.books = [];
+        this.loading = false;
+      }
+    });
+  }
+
+  chercher(): void {
+    if (this.search.trim().length < 2) {
+      this.chargerAccueil();
+      return;
+    }
+
+    this.loading = true;
+    this.books = [];
+
+    this.data.getBooks(this.search).subscribe({
+      next: (response) => {
+        this.books = response;
+        this.loading = false;
+        this.firstLoad = false;
+      },
+      error: () => {
+        this.books = [];
+        this.loading = false;
+      }
+    });
+  }
 }

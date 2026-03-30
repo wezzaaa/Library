@@ -1,2 +1,18 @@
-<h1>À lire</h1>
-<p>Liste personnelle des livres à lire.</p>
+<h1>Accueil bibliothèque</h1>
+
+<input [(ngModel)]="search" type="text" placeholder="Rechercher un livre ou un auteur">
+<button (click)="chercher()">Rechercher</button>
+
+<p *ngIf="loading">Chargement...</p>
+
+<p *ngIf="!loading && books.length === 0">
+  Aucun livre trouvé.
+</p>
+
+<div *ngFor="let book of books">
+  <p>
+    <strong>{{ book.title }}</strong>
+    - {{ book.authorNames.join(', ') }}
+    - {{ book.firstPublishYear }}
+  </p>
+</div>
