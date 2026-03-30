@@ -21,6 +21,15 @@ export interface Author {
   name: string;
 }
 
+export interface AuthorDetail {
+  id: string;
+  name: string;
+  bio: string;
+  birthDate: string;
+  deathDate: string;
+  works: Book[];
+}
+
 export interface BookDetail {
   id: string;
   title: string;
@@ -40,11 +49,12 @@ export class BookService {
   private searchCache = new Map<string, Observable<Book[]>>();
   private bookDetailCache = new Map<string, Observable<BookDetail>>();
   private authorCache = new Map<string, Observable<Author>>();
+  private authorDetailCache = new Map<string, Observable<AuthorDetail>>();
 
   getBooks(search: string): Observable<Book[]> {
     const value = search.trim().toLowerCase();
 
-    if (value.length < 2) {
+    if (value.length < 1) {
       return of([]);
     }
 
@@ -137,6 +147,40 @@ export class BookService {
     return request$;
   }
 
+  getAuthorDetailById(id: string): Observable<AuthorDetail> {
+    const cached = this.authorDetailCache.get(id);
+    if (cached) {
+      return cached;
+    }
+
+    const request$ = this.http.get<any>(`${this.baseUrl}/authors/${id}.json`).pipe(
+      switchMap((author: any) =>
+        this.http.get<any>(`${this.baseUrl}/authors/${id}/works.json?limit=12`).pipe(
+          map((worksResponse: any): AuthorDetail => ({
+            id: id,
+            name: author.name ?? 'Auteur inconnu',
+            bio: this.getBio(author.bio),
+            birthDate: author.birth_date ?? 'Inconnue',
+            deathDate: author.death_date ?? '---',
+            works: (worksResponse.entries ?? []).map((work: any) => ({
+              id: work.key ? work.key.replace('/works/', '') : '',
+              title: work.title ?? 'Titre inconnu',
+              authorNames: [author.name ?? 'Auteur inconnu'],
+              firstPublishYear: work.first_publish_date
+                ? Number(String(work.first_publish_date).slice(0, 4))
+                : null,
+              coverId: work.covers && work.covers.length > 0 ? work.covers[0] : null
+            }))
+          }))
+        )
+      ),
+      shareReplay(1)
+    );
+
+    this.authorDetailCache.set(id, request$);
+    return request$;
+  }
+
   private getDescription(description: any): string {
     if (!description) {
       return 'Pas de description';
@@ -151,5 +195,21 @@ export class BookService {
     }
 
     return 'Pas de description';
+  }
+
+  private getBio(bio: any): string {
+    if (!bio) {
+      return 'Pas de biographie.';
+    }
+
+    if (typeof bio === 'string') {
+      return bio;
+    }
+
+    if (bio.value) {
+      return bio.value;
+    }
+
+    return 'Pas de biographie.';
   }
 }

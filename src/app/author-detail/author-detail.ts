@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Author, BookService } from '../services/book.service';
+import { BookCard } from '../book-card/book-card';
+import { AuthorDetail as AuthorDetailModel, BookService } from '../services/book.service';
 
 @Component({
   selector: 'app-author-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, BookCard],
   templateUrl: './author-detail.html',
   styleUrl: './author-detail.css'
 })
@@ -14,7 +15,7 @@ export class AuthorDetail implements OnInit {
   private bookService = inject(BookService);
 
   authorId = '';
-  author: Author | null = null;
+  author: AuthorDetailModel | null = null;
   loading = false;
 
   ngOnInit(): void {
@@ -29,7 +30,7 @@ export class AuthorDetail implements OnInit {
 
     this.loading = true;
 
-    this.bookService.getAuthorById(this.authorId).subscribe({
+    this.bookService.getAuthorDetailById(this.authorId).subscribe({
       next: (response) => {
         this.author = response;
         this.loading = false;

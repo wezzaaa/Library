@@ -1,3 +1,18 @@
-h1 {
+.author-page h1 {
   margin-bottom: 16px;
+}
+
+.author-info {
+  margin-bottom: 32px;
+}
+
+.author-info p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.books-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }

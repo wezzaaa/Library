@@ -1,8 +1,24 @@
 <p *ngIf="loading">Chargement...</p>
 
-<div *ngIf="!loading && author">
+<div *ngIf="!loading && author" class="author-page">
   <h1>{{ author.name }}</h1>
-  <p><strong>ID :</strong> {{ author.id }}</p>
+
+  <div class="author-info">
+    <p><strong>Naissance :</strong> {{ author.birthDate }}</p>
+    <p><strong>Décès :</strong> {{ author.deathDate }}</p>
+    <p><strong>Biographie :</strong> {{ author.bio }}</p>
+  </div>
+
+  <h2>Ouvrages de cet auteur</h2>
+
+  <p *ngIf="author.works.length === 0">Aucun ouvrage trouvé.</p>
+
+  <div class="books-grid" *ngIf="author.works.length > 0">
+    <app-book-card
+      *ngFor="let book of author.works"
+      [book]="book">
+    </app-book-card>
+  </div>
 </div>
 
 <p *ngIf="!loading && !author">Auteur introuvable.</p>
