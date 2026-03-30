@@ -37,6 +37,7 @@ export class Data {
   http = inject(HttpClient);
   baseUrl = 'https://openlibrary.org';
   favoritesKey = 'favorite_books';
+  readingListKey = 'reading_list_books';
 
   getBooks(search: string): Observable<Book[]> {
     return this.http
@@ -146,5 +147,34 @@ export class Data {
 
   isFavorite(bookId: string): boolean {
     return this.getFavorites().some(book => book.id === bookId);
+  }
+
+  getReadingList(): Book[] {
+    const data = localStorage.getItem(this.readingListKey);
+
+    if (!data) {
+      return [];
+    }
+
+    return JSON.parse(data);
+  }
+
+  addToReadingList(book: Book): void {
+    const readingList = this.getReadingList();
+    const exists = readingList.find(item => item.id === book.id);
+
+    if (!exists) {
+      readingList.push(book);
+      localStorage.setItem(this.readingListKey, JSON.stringify(readingList));
+    }
+  }
+
+  removeFromReadingList(bookId: string): void {
+    const readingList = this.getReadingList().filter(book => book.id !== bookId);
+    localStorage.setItem(this.readingListKey, JSON.stringify(readingList));
+  }
+
+  isInReadingList(bookId: string): boolean {
+    return this.getReadingList().some(book => book.id === bookId);
   }
 }

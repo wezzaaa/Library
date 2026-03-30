@@ -37,4 +37,20 @@ export class BookCard {
   estFavori(): boolean {
     return this.data.isFavorite(this.book.id);
   }
+
+  ajouterALire(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.data.addToReadingList(this.book);
+  }
+
+  retirerALire(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.data.removeFromReadingList(this.book.id);
+  }
+
+  estDansALire(): boolean {
+    return this.data.isInReadingList(this.book.id);
+  }
 }

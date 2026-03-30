@@ -1,2 +1,10 @@
 <h1>À lire</h1>
-<p>Liste personnelle des livres à lire.</p>
+
+<p *ngIf="books.length === 0">Aucun livre dans la liste à lire.</p>
+
+<div class="books-grid" *ngIf="books.length > 0">
+  <app-book-card
+    *ngFor="let book of books"
+    [book]="book">
+  </app-book-card>
+</div>

@@ -21,5 +21,13 @@
     <button *ngIf="estFavori()" (click)="retirerDesFavoris($event)">
       Retirer des favoris
     </button>
+
+    <button *ngIf="!estDansALire()" (click)="ajouterALire($event)">
+      Ajouter à lire
+    </button>
+
+    <button *ngIf="estDansALire()" (click)="retirerALire($event)">
+      Retirer de à lire
+    </button>
   </div>
 </a>
