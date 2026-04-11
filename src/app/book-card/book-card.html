@@ -14,20 +14,28 @@
       {{ book.firstPublishYear || 'Inconnue' }}
     </p>
 
-    <button *ngIf="!estFavori()" (click)="ajouterAuxFavoris($event)">
-      Ajouter aux favoris
-    </button>
+    @if (!estFavori()) {
+      <button (click)="ajouterAuxFavoris($event)">
+        Ajouter aux favoris
+      </button>
+    }
 
-    <button *ngIf="estFavori()" (click)="retirerDesFavoris($event)">
-      Retirer des favoris
-    </button>
+    @if (estFavori()) {
+      <button (click)="retirerDesFavoris($event)">
+        Retirer des favoris
+      </button>
+    }
 
-    <button *ngIf="!estDansALire()" (click)="ajouterALire($event)">
-      Ajouter à lire
-    </button>
+    @if (!estDansALire()) {
+      <button (click)="ajouterALire($event)">
+        Ajouter à lire
+      </button>
+    }
 
-    <button *ngIf="estDansALire()" (click)="retirerALire($event)">
-      Retirer de à lire
-    </button>
+    @if (estDansALire()) {
+      <button (click)="retirerALire($event)">
+        Retirer de à lire
+      </button>
+    }
   </div>
 </a>

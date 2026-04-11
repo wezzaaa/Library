@@ -1,22 +1,37 @@
-.search-bar {
+.home-title {
+  margin-bottom: 8px;
+}
+
+.home-subtitle {
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section h2 {
+  margin-bottom: 16px;
+}
+
+.recommendation-reason {
+  margin-bottom: 14px;
+  color: #666;
+}
+
+.books-row {
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.search-bar input {
-  flex: 1;
-  padding: 10px 12px;
-  font-size: 16px;
-}
-
-.search-bar button {
-  padding: 10px 16px;
-  cursor: pointer;
-}
-
-.books-grid {
-  display: flex;
-  flex-wrap: wrap;
   gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.books-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.books-row::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
 }

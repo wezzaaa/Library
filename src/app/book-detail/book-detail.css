@@ -2,6 +2,7 @@
   display: flex;
   gap: 24px;
   align-items: flex-start;
+  margin-bottom: 40px;
 }
 
 .detail-container img {
@@ -16,4 +17,19 @@
 
 .detail-content h1 {
   margin-top: 0;
+}
+
+.recommendations-section {
+  margin-top: 24px;
+}
+
+.recommendation-reason {
+  margin-bottom: 16px;
+  color: #666;
+}
+
+.books-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }

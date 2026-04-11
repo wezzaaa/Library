@@ -1,0 +1,34 @@
+<h1>Profil utilisateur</h1>
+
+<div class="stats">
+  <p><strong>Favoris :</strong> {{ favorites.length }}</p>
+  <p><strong>À lire :</strong> {{ readingList.length }}</p>
+</div>
+
+<h2>Mes favoris</h2>
+
+@if (favorites.length === 0) {
+  <p>Aucun favori.</p>
+}
+
+@if (favorites.length > 0) {
+  <div class="books-grid">
+    @for (book of favorites; track book.id) {
+      <app-book-card [book]="book"></app-book-card>
+    }
+  </div>
+}
+
+<h2>Ma liste de lecture</h2>
+
+@if (readingList.length === 0) {
+  <p>Aucun livre.</p>
+}
+
+@if (readingList.length > 0) {
+  <div class="books-grid">
+    @for (book of readingList; track book.id) {
+      <app-book-card [book]="book"></app-book-card>
+    }
+  </div>
+}

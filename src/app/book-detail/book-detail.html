@@ -1,36 +1,65 @@
-<p *ngIf="loading">Chargement...</p>
+@if (loading) {
+  <p>Chargement...</p>
+}
 
-<div *ngIf="!loading && book" class="detail-container">
-  <img [src]="getCoverUrl()" [alt]="book.title">
+@if (!loading && book) {
+  <div class="detail-container">
+    <img [src]="getCoverUrl()" [alt]="book.title">
 
-  <div class="detail-content">
-    <h1>{{ book.title }}</h1>
+    <div class="detail-content">
+      <h1>{{ book.title }}</h1>
 
-    <p>
-      <strong>Description :</strong>
-      {{ book.description }}
-    </p>
+      <p>
+        <strong>Description :</strong>
+        {{ book.description }}
+      </p>
 
-    <p>
-      <strong>Auteurs :</strong>
-      <span *ngIf="book.authors.length === 0">Aucun auteur</span>
+      <p>
+        <strong>Auteurs :</strong>
 
-      <ng-container *ngFor="let author of book.authors; let last = last">
-        <a [routerLink]="['/author', author.id]">{{ author.name }}</a>
-        <span *ngIf="!last">, </span>
-      </ng-container>
-    </p>
+        @if (book.authors.length === 0) {
+          <span>Aucun auteur</span>
+        }
 
-    <p>
-      <strong>Sujets :</strong>
-      {{ book.subjects.slice(0, 8).join(', ') || 'Aucun sujet' }}
-    </p>
+        @for (author of book.authors; track author.id; let last = $last) {
+          <a [routerLink]="['/author', author.id]">{{ author.name }}</a>
+          @if (!last) {
+            <span>, </span>
+          }
+        }
+      </p>
 
-    <p>
-      <strong>ID :</strong>
-      {{ book.id }}
-    </p>
+      <p>
+        <strong>Sujets :</strong>
+        {{ book.subjects.slice(0, 8).join(', ') || 'Aucun sujet' }}
+      </p>
+
+      <p>
+        <strong>ID :</strong>
+        {{ book.id }}
+      </p>
+    </div>
   </div>
-</div>
+}
 
-<p *ngIf="!loading && !book">Livre introuvable.</p>
+@if (!loading && recommendations.length > 0) {
+  <div class="recommendations-section">
+    <h2>Recommandations</h2>
+
+    @if (recommendationReason) {
+      <p class="recommendation-reason">
+        {{ recommendationReason }}
+      </p>
+    }
+
+    <div class="books-grid">
+      @for (recommendedBook of recommendations; track recommendedBook.id) {
+        <app-book-card [book]="recommendedBook"></app-book-card>
+      }
+    </div>
+  </div>
+}
+
+@if (!loading && !book) {
+  <p>Livre introuvable.</p>
+}

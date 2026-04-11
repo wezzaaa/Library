@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { BookDetail as BookDetailModel, BookService } from '../services/book.service';
+import { Book, BookDetail as BookDetailModel, BookService } from '../services/book.service';
+import { BookCard } from '../book-card/book-card';
 
 @Component({
   selector: 'app-book-detail',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, BookCard],
   templateUrl: './book-detail.html',
   styleUrl: './book-detail.css'
 })
@@ -15,6 +16,8 @@ export class BookDetail implements OnInit {
 
   bookId = '';
   book: BookDetailModel | null = null;
+  recommendations: Book[] = [];
+  recommendationReason = '';
   loading = false;
 
   ngOnInit(): void {
@@ -28,14 +31,36 @@ export class BookDetail implements OnInit {
     }
 
     this.loading = true;
+    this.recommendations = [];
+    this.recommendationReason = '';
 
     this.bookService.getBookById(this.bookId).subscribe({
       next: (response) => {
         this.book = response;
         this.loading = false;
+
+        this.bookService.getRecommendations(response).subscribe({
+          next: (books) => {
+            this.recommendations = books;
+
+            if (response.authors.length > 0) {
+              this.recommendationReason = `Basé sur l’auteur : ${response.authors[0].name}`;
+            } else if (response.subjects.length > 0) {
+              this.recommendationReason = `Basé sur le sujet : ${response.subjects[0]}`;
+            } else {
+              this.recommendationReason = '';
+            }
+          },
+          error: () => {
+            this.recommendations = [];
+            this.recommendationReason = '';
+          }
+        });
       },
       error: () => {
         this.book = null;
+        this.recommendations = [];
+        this.recommendationReason = '';
         this.loading = false;
       }
     });

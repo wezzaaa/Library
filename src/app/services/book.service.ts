@@ -39,6 +39,48 @@ export interface BookDetail {
   authors: Author[];
 }
 
+interface OpenLibrarySearchDoc {
+  key?: string;
+  title?: string;
+  author_name?: string[];
+  first_publish_year?: number;
+  cover_i?: number;
+}
+
+interface OpenLibrarySearchResponse {
+  docs?: OpenLibrarySearchDoc[];
+}
+
+interface OpenLibraryTextField {
+  value?: string;
+}
+
+interface OpenLibraryWorkDetailResponse {
+  title?: string;
+  description?: string | OpenLibraryTextField;
+  subjects?: string[];
+  covers?: number[];
+  authors?: AuthorRef[];
+}
+
+interface OpenLibraryAuthorResponse {
+  name?: string;
+  bio?: string | OpenLibraryTextField;
+  birth_date?: string;
+  death_date?: string;
+}
+
+interface OpenLibraryAuthorWorkEntry {
+  key?: string;
+  title?: string;
+  first_publish_date?: string;
+  covers?: number[];
+}
+
+interface OpenLibraryAuthorWorksResponse {
+  entries?: OpenLibraryAuthorWorkEntry[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -68,9 +110,9 @@ export class BookService {
         ? `${this.baseUrl}/search.json?title=${encodeURIComponent(value)}&limit=12`
         : `${this.baseUrl}/search.json?q=${encodeURIComponent(value)}&limit=12`;
 
-    const request$ = this.http.get<any>(query).pipe(
+    const request$ = this.http.get<OpenLibrarySearchResponse>(query).pipe(
       map(response =>
-        (response.docs ?? []).map((item: any) => ({
+        (response.docs ?? []).map((item): Book => ({
           id: item.key ? item.key.replace('/works/', '') : '',
           title: item.title ?? 'Titre inconnu',
           authorNames: item.author_name ?? [],
@@ -91,34 +133,34 @@ export class BookService {
       return cached;
     }
 
-    const request$ = this.http.get<any>(`${this.baseUrl}/works/${id}.json`).pipe(
-      switchMap((item: any) => {
+    const request$ = this.http.get<OpenLibraryWorkDetailResponse>(`${this.baseUrl}/works/${id}.json`).pipe(
+      switchMap(item => {
         const authorRequests: Observable<Author>[] =
           item.authors && item.authors.length > 0
-            ? item.authors.map((a: AuthorRef) =>
-                this.getAuthorById(a.author.key.replace('/authors/', ''))
+            ? item.authors.map(authorRef =>
+                this.getAuthorById(authorRef.author.key.replace('/authors/', ''))
               )
             : [];
 
         if (authorRequests.length === 0) {
           return of({
-            id: id,
+            id,
             title: item.title ?? 'Titre inconnu',
             description: this.getDescription(item.description),
             subjects: item.subjects ?? [],
             covers: item.covers ?? [],
             authors: []
-          } as BookDetail);
+          });
         }
 
         return forkJoin(authorRequests).pipe(
-          map((authors: Author[]): BookDetail => ({
-            id: id,
+          map((authors): BookDetail => ({
+            id,
             title: item.title ?? 'Titre inconnu',
             description: this.getDescription(item.description),
             subjects: item.subjects ?? [],
             covers: item.covers ?? [],
-            authors: authors
+            authors
           }))
         );
       }),
@@ -135,9 +177,9 @@ export class BookService {
       return cached;
     }
 
-    const request$ = this.http.get<any>(`${this.baseUrl}/authors/${id}.json`).pipe(
-      map((author: any): Author => ({
-        id: id,
+    const request$ = this.http.get<OpenLibraryAuthorResponse>(`${this.baseUrl}/authors/${id}.json`).pipe(
+      map((author): Author => ({
+        id,
         name: author.name ?? 'Auteur inconnu'
       })),
       shareReplay(1)
@@ -153,16 +195,16 @@ export class BookService {
       return cached;
     }
 
-    const request$ = this.http.get<any>(`${this.baseUrl}/authors/${id}.json`).pipe(
-      switchMap((author: any) =>
-        this.http.get<any>(`${this.baseUrl}/authors/${id}/works.json?limit=12`).pipe(
-          map((worksResponse: any): AuthorDetail => ({
-            id: id,
+    const request$ = this.http.get<OpenLibraryAuthorResponse>(`${this.baseUrl}/authors/${id}.json`).pipe(
+      switchMap(author =>
+        this.http.get<OpenLibraryAuthorWorksResponse>(`${this.baseUrl}/authors/${id}/works.json?limit=12`).pipe(
+          map((worksResponse): AuthorDetail => ({
+            id,
             name: author.name ?? 'Auteur inconnu',
             bio: this.getBio(author.bio),
             birthDate: author.birth_date ?? 'Inconnue',
             deathDate: author.death_date ?? '---',
-            works: (worksResponse.entries ?? []).map((work: any) => ({
+            works: (worksResponse.entries ?? []).map((work): Book => ({
               id: work.key ? work.key.replace('/works/', '') : '',
               title: work.title ?? 'Titre inconnu',
               authorNames: [author.name ?? 'Auteur inconnu'],
@@ -181,7 +223,23 @@ export class BookService {
     return request$;
   }
 
-  private getDescription(description: any): string {
+  getRecommendations(book: BookDetail): Observable<Book[]> {
+    if (book.authors.length > 0) {
+      return this.getBooks(book.authors[0].name).pipe(
+        map(books => books.filter(item => item.id !== book.id).slice(0, 8))
+      );
+    }
+
+    if (book.subjects.length > 0) {
+      return this.getBooks(book.subjects[0]).pipe(
+        map(books => books.filter(item => item.id !== book.id).slice(0, 8))
+      );
+    }
+
+    return of([]);
+  }
+
+  private getDescription(description?: string | OpenLibraryTextField): string {
     if (!description) {
       return 'Pas de description';
     }
@@ -197,7 +255,7 @@ export class BookService {
     return 'Pas de description';
   }
 
-  private getBio(bio: any): string {
+  private getBio(bio?: string | OpenLibraryTextField): string {
     if (!bio) {
       return 'Pas de biographie.';
     }

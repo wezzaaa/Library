@@ -8,9 +8,11 @@ import { Book } from './book.service';
 export class StorageService {
   private favoritesKey = 'favorite_books';
   private readingListKey = 'reading_list_books';
+  private searchHistoryKey = 'search_history';
 
   favorites$ = new BehaviorSubject<Book[]>(this.getFavorites());
   readingList$ = new BehaviorSubject<Book[]>(this.getReadingList());
+  searchHistory$ = new BehaviorSubject<string[]>(this.getSearchHistory());
 
   getFavorites(): Book[] {
     const data = localStorage.getItem(this.favoritesKey);
@@ -72,5 +74,36 @@ export class StorageService {
 
   isInReadingList(bookId: string): boolean {
     return this.getReadingList().some(book => book.id === bookId);
+  }
+
+  getSearchHistory(): string[] {
+    const data = localStorage.getItem(this.searchHistoryKey);
+
+    if (!data) {
+      return [];
+    }
+
+    return JSON.parse(data);
+  }
+
+  addSearchToHistory(search: string): void {
+    const value = search.trim();
+
+    if (!value) {
+      return;
+    }
+
+    const history = this.getSearchHistory().filter(item => item.toLowerCase() !== value.toLowerCase());
+    history.unshift(value);
+
+    const limitedHistory = history.slice(0, 8);
+
+    localStorage.setItem(this.searchHistoryKey, JSON.stringify(limitedHistory));
+    this.searchHistory$.next(limitedHistory);
+  }
+
+  clearSearchHistory(): void {
+    localStorage.removeItem(this.searchHistoryKey);
+    this.searchHistory$.next([]);
   }
 }

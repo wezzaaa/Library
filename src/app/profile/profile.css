@@ -1,0 +1,14 @@
+.stats {
+  margin-bottom: 24px;
+}
+
+.stats p {
+  margin: 6px 0;
+}
+
+.books-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}

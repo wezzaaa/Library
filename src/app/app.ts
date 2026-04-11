@@ -10,5 +10,5 @@ import { Footer } from './footer/footer';
   styleUrl: './app.css'
 })
 export class App {
-  title = 'Library';
+  title = 'Storya';
 }

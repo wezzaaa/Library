@@ -1,10 +1,13 @@
 <h1>À lire</h1>
 
-<p *ngIf="books.length === 0">Aucun livre dans la liste à lire.</p>
+@if (books.length === 0) {
+  <p>Aucun livre dans la liste à lire.</p>
+}
 
-<div class="books-grid" *ngIf="books.length > 0">
-  <app-book-card
-    *ngFor="let book of books"
-    [book]="book">
-  </app-book-card>
-</div>
+@if (books.length > 0) {
+  <div class="books-grid">
+    @for (book of books; track book.id) {
+      <app-book-card [book]="book"></app-book-card>
+    }
+  </div>
+}
