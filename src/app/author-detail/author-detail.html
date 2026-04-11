@@ -1,0 +1,33 @@
+@if (loading) {
+  <p>Chargement...</p>
+}
+
+@if (!loading && author) {
+  <div class="author-page">
+    <h1>{{ author.name }}</h1>
+
+    <div class="author-info">
+      <p><strong>Naissance :</strong> {{ author.birthDate }}</p>
+      <p><strong>Décès :</strong> {{ author.deathDate }}</p>
+      <p><strong>Biographie :</strong> {{ author.bio }}</p>
+    </div>
+
+    <h2>Ouvrages de cet auteur</h2>
+
+    @if (author.works.length === 0) {
+      <p>Aucun ouvrage trouvé.</p>
+    }
+
+    @if (author.works.length > 0) {
+      <div class="books-grid">
+        @for (book of author.works; track book.id) {
+          <app-book-card [book]="book"></app-book-card>
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (!loading && !author) {
+  <p>Auteur introuvable.</p>
+}

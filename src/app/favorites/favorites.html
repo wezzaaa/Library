@@ -1,0 +1,13 @@
+<h1>Favoris</h1>
+
+@if (books.length === 0) {
+  <p>Aucun favori pour le moment.</p>
+}
+
+@if (books.length > 0) {
+  <div class="books-grid">
+    @for (book of books; track book.id) {
+      <app-book-card [book]="book"></app-book-card>
+    }
+  </div>
+}

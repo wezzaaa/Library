@@ -1,0 +1,49 @@
+<h1 class="home-title">Storya</h1>
+<p class="home-subtitle">Explore books through a modern and personalized reading experience.</p>
+
+@if (loading) {
+  <p>Chargement...</p>
+}
+
+@if (continueReading.length > 0) {
+  <section class="section">
+    <h2>Reprendre la lecture</h2>
+    <div class="books-row">
+      @for (book of continueReading; track book.id) {
+        <app-book-card [book]="book"></app-book-card>
+      }
+    </div>
+  </section>
+}
+
+@if (smartRecommendations.length > 0) {
+  <section class="section">
+    <h2>Vous pourriez aimer</h2>
+
+    @if (smartRecommendationReason) {
+      <p class="recommendation-reason">
+        {{ smartRecommendationReason }}
+      </p>
+    }
+
+    <div class="books-row">
+      @for (book of smartRecommendations; track book.id) {
+        <app-book-card [book]="book"></app-book-card>
+      }
+    </div>
+  </section>
+}
+
+@for (category of categories; track category.title) {
+  <section class="section">
+    <h2>{{ category.title }}</h2>
+
+    @if (category.books.length > 0) {
+      <div class="books-row">
+        @for (book of category.books; track book.id) {
+          <app-book-card [book]="book"></app-book-card>
+        }
+      </div>
+    }
+  </section>
+}

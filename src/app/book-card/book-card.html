@@ -1,0 +1,41 @@
+<a class="card-link" [routerLink]="['/book', book.id]">
+  <div class="card">
+    <img [src]="getCoverUrl()" [alt]="book.title">
+
+    <h3>{{ book.title }}</h3>
+
+    <p>
+      <strong>Auteur(s) :</strong>
+      {{ book.authorNames.join(', ') || 'Inconnu' }}
+    </p>
+
+    <p>
+      <strong>Année :</strong>
+      {{ book.firstPublishYear || 'Inconnue' }}
+    </p>
+
+    @if (!estFavori()) {
+      <button (click)="ajouterAuxFavoris($event)">
+        Ajouter aux favoris
+      </button>
+    }
+
+    @if (estFavori()) {
+      <button (click)="retirerDesFavoris($event)">
+        Retirer des favoris
+      </button>
+    }
+
+    @if (!estDansALire()) {
+      <button (click)="ajouterALire($event)">
+        Ajouter à lire
+      </button>
+    }
+
+    @if (estDansALire()) {
+      <button (click)="retirerALire($event)">
+        Retirer de à lire
+      </button>
+    }
+  </div>
+</a>

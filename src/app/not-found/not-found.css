@@ -1,0 +1,26 @@
+.not-found {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.not-found h1 {
+  font-size: 72px;
+  margin-bottom: 12px;
+}
+
+.not-found h2 {
+  margin-bottom: 16px;
+}
+
+.not-found p {
+  margin-bottom: 24px;
+  color: #666;
+}
+
+.not-found a {
+  text-decoration: none;
+  padding: 12px 18px;
+  border: 1px solid #111;
+  border-radius: 8px;
+  color: #111;
+}

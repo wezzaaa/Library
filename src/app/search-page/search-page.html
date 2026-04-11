@@ -1,0 +1,89 @@
+<h1>Recherche</h1>
+
+<div class="search-bar">
+  <input
+    [formControl]="searchControl"
+    type="text"
+    placeholder="Rechercher un livre ou un auteur"
+  >
+</div>
+
+<div class="filters">
+  <input
+    [formControl]="authorFilterControl"
+    type="text"
+    placeholder="Filtrer par auteur"
+  >
+
+  <select [formControl]="yearFilterControl">
+    <option value="all">Toutes les années</option>
+    <option value="before-1950">Avant 1950</option>
+    <option value="1950-1999">1950 - 1999</option>
+    <option value="2000-2009">2000 - 2009</option>
+    <option value="2010-2019">2010 - 2019</option>
+    <option value="2020-now">2020 à aujourd'hui</option>
+  </select>
+
+  <select [formControl]="sortControl">
+    <option value="default">Tri par défaut</option>
+    <option value="title-asc">Titre A à Z</option>
+    <option value="title-desc">Titre Z à A</option>
+    <option value="year-desc">Année la plus récente</option>
+    <option value="year-asc">Année la plus ancienne</option>
+  </select>
+</div>
+
+@if (searchHistory.length > 0) {
+  <div class="history-section">
+    <div class="history-header">
+      <h2>Historique de recherche</h2>
+      <button (click)="clearHistory()">Effacer</button>
+    </div>
+
+    <div class="history-list">
+      @for (item of searchHistory; track item) {
+        <button
+          class="history-item"
+          (click)="useHistoryItem(item)">
+          {{ item }}
+        </button>
+      }
+    </div>
+  </div>
+}
+
+@if (loading) {
+  <p>Chargement...</p>
+}
+
+@if (!loading && !hasSearched) {
+  <p>
+    Commence à taper pour rechercher un livre.
+  </p>
+}
+
+@if (!loading && hasSearched && filteredBooks.length > 0) {
+  <p class="results-info">
+    {{ filteredBooks.length }} résultat(s) trouvé(s)
+  </p>
+}
+
+@if (!loading && hasSearched && filteredBooks.length === 0 && message) {
+  <p>
+    {{ message }}
+  </p>
+}
+
+@if (!loading && displayedBooks.length > 0) {
+  <div class="books-grid">
+    @for (book of displayedBooks; track book.id) {
+      <app-book-card [book]="book"></app-book-card>
+    }
+  </div>
+}
+
+@if (!loading && canShowMore()) {
+  <div class="load-more">
+    <button (click)="voirPlus()">Voir plus</button>
+  </div>
+}
